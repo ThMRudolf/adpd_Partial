@@ -34,6 +34,7 @@ wheels/
 *.manifest
 *.spec
 
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
@@ -113,3 +114,5 @@ ENV/
 
 # playground folders
 .playground/
+
+credentials.json
