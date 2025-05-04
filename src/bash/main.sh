@@ -33,7 +33,16 @@ echo "startinng preprocessed filtered data"
 ./clean_filt_data.sh 2021 p
 ./clean_filt_data.sh 2022 p
 ./clean_filt_data.sh 2023 p
-./clean_filt_data.sh 2024 p
+./clean_filt_data.sh 2024 
+
+echo "startinng preprocessed filtered data to clear sapces"
+./clean_space.sh 2018 
+./clean_space.sh 2019
+./clean_space.sh 2020
+./clean_space.sh 2021
+./clean_space.sh 2022
+./clean_space.sh 2023
+./clean_space.sh 2024
 
 end_time=$(date +"%Y-%m-%d %H:%M:%S")
 echo "Script ended at: $end_time"
