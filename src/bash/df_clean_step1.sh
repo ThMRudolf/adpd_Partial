@@ -1,41 +1,60 @@
 #!/bin/bash
-# This script processes CSV files in a specified folder by replacing commas inside quotes with semicolons.
-# Get the input year folder
+# This script processes a CSV file by filtering for specific columns and replacing commas with pipes.
+# It handles quoted fields correctly, ensuring that commas within quotes are not replaced.
+# Input CSV file
+# -----------------------------------------------------------------------------
+# clean_data_filt_basicos.sh
+#
+# This script processes data by filtering based on a specific column and value.
+#
+# USAGE:
+#   ./clean_data_filt_basicos.sh <year> <column_number> <filter_value>
+#
+# PARAMETERS:
+#   year (int)           : The year to be processed.
+#   column_number (int)  : The column index to be used for operations.
+#   filter_value (str)   : The value to filter the data by.
+#
+# EXAMPLE:
+#   ./clean_data_filt_basicos.sh 2023 2 "active"
+#
+# -----------------------------------------------------------------------------
+# This function takes three input parameters:
+# 1. year (int): The year to be processed.
+# 2. column_number (int): The column index to be used for operations.
+# 3. filter_value (str): The value to filter the data by.
 year="$1"
-input_type="$2"
-if [ "$input_type" == "r" ]; then
-    input_folder="../../data/raw/$year"
-elif [ "$input_type" == "p" ]; then
-    input_folder="../../data/processed/$year"
-else
-    echo "Invalid input type. Use 'r' for raw data or 'p' for processed data."
+if [[ -z "$year" ]]; then
+    echo "Usage: $0 <year>"
     exit 1
 fi
-if [ "$input_type" == "r" ]; then
-    output_folder="../../data/processed/$year/cleaned"
-elif [ "$input_type" == "p" ]; then
-    output_folder="../../data/processed/$year/filtered_and_cleaned"
+
+input_folder="../../data/raw/$year"
+output_folder="../../data/processed/$year"
+column_number="$2"
+filter_value="$3"
+
+if [[ -z "$column_number" || -z "$filter_value" ]]; then
+    echo "Usage: $0 <year> <column_number> <filter_value>"
+    exit 1
 fi
+
 mkdir -p "$output_folder"
-
-
-# Loop through all CSV files in the folder
-for file in "$input_folder" /*.csv; do
+start_time=$(date +"%Y-%m-%d %H:%M:%S")
+echo "Script started at: $start_time"
+for file in "$input_folder"/*.csv; do   
+    #echo $file
     if [[ -f "$file" ]]; then
         output_file="$output_folder/$(basename "$file")"
-
-        # Use awk to replace commas inside quotes with semicolons
-        awk -v OFS=',' '{
-            while (match($0, /"[^"]*"/)) {
-                part = substr($0, RSTART, RLENGTH)
-                gsub(/,/, "", part)
-                $0 = substr($0, 1, RSTART-1) part substr($0, RSTART+RLENGTH)
-            }
-            print
+        awk -v col="$column_number" -v val="$filter_value" -F',' '
+        BEGIN { OFS = "," }
+        {
+            if (NR == 1 || $col == val) print $0
+            $$7 = ""
         }' "$file" > "$output_file"
         echo "Processed $file -> $output_file"
     fi
 done
-
-echo "Processing completed! Modified files are in '$output_folder'."
-
+end_time=$(date +"%Y-%m-%d %H:%M:%S")
+echo "Script ended at: $end_time"
+echo "Total time taken: $(( $(date -d "$end_time" +%s) - $(date -d "$start_time" +%s) )) seconds"
