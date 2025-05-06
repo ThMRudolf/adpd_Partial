@@ -2,6 +2,7 @@
 
 # call the script with the data_preprocessing for each year (2018 to 2024)
 # Usage: ./data_preprocessing.sh <year> r
+start_time=$(date +%s)
 echo "Start time: $(date)"
 
 echo " "
@@ -28,7 +29,7 @@ echo "2024"
 
 echo "End time: $(date)"
 echo "All data preprocessing completed."
-start_time=$(date +%s)
+
 end_time=$(date +%s)
 elapsed_time=$((end_time - start_time))
 echo "Total elapsed time: ${elapsed_time} seconds."
