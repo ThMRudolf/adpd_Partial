@@ -20,7 +20,7 @@ mkdir -p "$output_folder"
 
 
 # Loop through all CSV files in the folder
-for file in "$input_folder"/*.csv; do
+for file in "$input_folder" /*.csv; do
     if [[ -f "$file" ]]; then
         output_file="$output_folder/$(basename "$file")"
 
@@ -28,7 +28,7 @@ for file in "$input_folder"/*.csv; do
         awk -v OFS=',' '{
             while (match($0, /"[^"]*"/)) {
                 part = substr($0, RSTART, RLENGTH)
-                gsub(/,/, ";", part)
+                gsub(/,/, "", part)
                 $0 = substr($0, 1, RSTART-1) part substr($0, RSTART+RLENGTH)
             }
             print
