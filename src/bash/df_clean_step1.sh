@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# This script processes CSV files in a specified folder by replacing commas inside quotes with semicolons.
 # Get the input year folder
 year="$1"
 input_type="$2"
@@ -20,15 +20,21 @@ mkdir -p "$output_folder"
 
 
 # Loop through all CSV files in the folder
-find $input_folder -type f -name "*.csv" | while read FILE; do
-    RELATIVE_PATH="$input_folder/"  # Get relative path
-    OUTPUT_FILE="$output_folder"  # Define output path
+for file in "$input_folder"/*.csv; do
+    if [[ -f "$file" ]]; then
+        output_file="$output_folder/$(basename "$file")"
 
-    echo "Processing: $FILE -> $output_folder"
-    
-    # Use sed to replace commas inside quotes with semicolons
-    sed -E 's/"([^"]*),([^"]*)"/"\1;\2"/g' "$FILE" > "$output_folder"
-    
+        # Use awk to replace commas inside quotes with semicolons
+        awk -v OFS=',' '{
+            while (match($0, /"[^"]*"/)) {
+                part = substr($0, RSTART, RLENGTH)
+                gsub(/,/, ";", part)
+                $0 = substr($0, 1, RSTART-1) part substr($0, RSTART+RLENGTH)
+            }
+            print
+        }' "$file" > "$output_file"
+        echo "Processed $file -> $output_file"
+    fi
 done
 
 echo "Processing completed! Modified files are in '$output_folder'."
