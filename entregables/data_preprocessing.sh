@@ -41,7 +41,7 @@ fi
 mkdir -p "$output_folder"
 
 
-start_time=$(date +"%Y-%m-%d %H:%M:%S")
+start_time=$(date +%s)
 echo "Script started at: $start_time"
 
 echo $basename
@@ -63,6 +63,6 @@ for file in "$input_folder"/*.csv; do
     fi
 done
 
-end_time=$(date +"%Y-%m-%d %H:%M:%S")
+end_time=$$(date +%s)
 echo "Script ended at: $end_time"
 echo "Total time taken: $(( $(date -d "$end_time" +%s) - $(date -d "$start_time" +%s) )) seconds"
