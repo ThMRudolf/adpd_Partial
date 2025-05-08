@@ -3,33 +3,37 @@
 # It handles quoted fields correctly, ensuring that commas within quotes are not replaced.
 # Input CSV file
 # -----------------------------------------------------------------------------
-# clean_data_filt_basicos.sh
+# SCRIPT NAME: clean_data_filt_basicos.sh
 #
-# This script processes data by filtering based on a specific column and value.
+# DESCRIPTION:
+# This script processes a CSV file by filtering rows based on a specific column 
+# and value. It ensures proper handling of quoted fields, preserving the integrity 
+# of data with commas within quotes. Additionally, it replaces commas with pipes 
+# for easier downstream processing.
 #
 # USAGE:
-#   ./clean_data_filt_basicos.sh <year> <column_number> <filter_value>
+#   ./clean_data_filt_basicos.sh <year> <r, p>
 #
 # PARAMETERS:
-#   year (int)           : The year to be processed.
-#   column_number (int)  : The column index to be used for operations.
-#   filter_value (str)   : The value to filter the data by.
+#   year (int)          : The year to be processed.
+#   r (string)          : filering raw data.
+#   p (string)          : filering processed data.
 #
 # EXAMPLE:
-#   ./clean_data_filt_basicos.sh 2023 2 "active"
+#   ./clean_data_filt_basicos.sh 2023 r
+#
+# NOTES:
+# - Ensure the input CSV file is properly formatted and accessible.
+# - The script assumes the column index starts from 1 (not 0-based indexing).
+# - Quoted fields are handled correctly to avoid unintended replacements.
+#
+# AUTHOR:
+#   [Sofia/Marta/Thomas]
+#
+# VERSION:
+#   1.0
 #
 # -----------------------------------------------------------------------------
-# This function takes three input parameters:
-# 1. year (int): The year to be processed.
-# 2. column_number (int): The column index to be used for operations.
-# 3. filter_value (str): The value to filter the data by.
-year="$1"
-input_type="$2"
-if [ "$input_type" == "r" ]; then
-    input_folder="../data/raw/$year"
-elif [ "$input_type" == "p" ]; then
-    input_folder="../data/processed/$year"
-else
     echo "Invalid input type. Use 'r' for raw data or 'p' for processed data."
     exit 1
 fi
